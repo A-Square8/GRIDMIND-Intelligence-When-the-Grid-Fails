@@ -1,0 +1,134 @@
+test the retrival system 
+stage 4
+python3 main.py retrieve "I am six days into a solo wilderness trek and everything went wrong. A severe storm just destroyed my camp. I have a deep laceration on my forearm that looks heavily infected—it is red, swollen, and warm to the touch. I am completely out of clean water, but there is a murky, stagnant pond nearby. I have absolutely no medical supplies, no iodine, no commercial water filters, and no cell service. The only items I have left are a working lighter, a rusty metal cooking tin, the dirty t-shirt on my back, and pine sap from a nearby tree. How do I immediately manage this infected wound and safely hydrate myself from that pond so I survive the next 48 hours?" --top-k 8
+
+
+
+test llm response (rag+llm)
+stage 6
+python3 main.py ask "What are the early signs of radiation sickness?"
+
+
+
+
+
+| #  | Domain                         | Key Topics                                             |
+| -- | ------------------------------ | ------------------------------------------------------ |
+| 01 | Survival Fundamentals          | Mindset, priorities, shelter, situational awareness    |
+| 02 | Health & First Aid             | Basic medicine, wound care, illness treatment          |
+| 03 | Water Sourcing & Purification  | Finding, filtering, purifying, storage                 |
+| 04 | Food Foraging & Hunting        | Wild edibles, trapping, hunting, meat preservation     |
+| 05 | Agriculture & Seed Saving      | Growing food, composting, crop rotation, seeds         |
+| 06 | Fire & Thermal Management      | Fire starting, warmth, cooking, improvised heating     |
+| 07 | Shelter Construction           | Building from raw materials, insulation, waterproofing |
+| 08 | Weapons & Self-Defense         | Improvised weapons, bows, blades, defense tactics      |
+| 09 | Navigation & Terrain           | Stars, sun, maps, scouting, no-GPS movement            |
+| 10 | Basic Electronics & Repair     | Salvaging parts, wiring, solar, battery repair         |
+| 11 | Radio & Communication          | HAM radio, antennas, Morse code, signal detection      |
+| 12 | Trauma & Field Surgery         | Wound closure, infection, triage, improvised tools     |
+| 13 | Metalworking & Toolmaking      | Forging, smelting scrap, making tools from raw metal   |
+| 14 | Textiles & Handcraft           | Sewing, leather, plant fiber, waterproofing fabric     |
+| 15 | Mental Health & Group Dynamics | Resilience, conflict resolution, leadership, morale    |
+
+
+| #  | Domain                         | Best PDF Sources                                                   |
+| -- | ------------------------------ | ------------------------------------------------------------------ |
+| 01 | Survival Fundamentals          | US Army FM 21-76, SAS Survival Handbook                            |
+| 02 | Health & First Aid             | Where There Is No Doctor, US Army First Aid FM 4-25.11             |
+| 03 | Water Purification             | US Army FM 21-76 Ch.6, EPA Emergency Water Guide                   |
+| 04 | Food Foraging & Hunting        | Tom Brown's Field Guide, US Army Foraging FM                       |
+| 05 | Agriculture & Seeds            | Storey's Basic Country Skills, Back to Basics                      |
+| 06 | Fire & Thermal                 | Bushcraft 101, Mors Kochanski Bushcraft                            |
+| 07 | Shelter Construction           | US Army FM 21-76 Ch.5, Bushcraft 101                               |
+| 08 | Weapons & Self-Defense         | Improvised Weapons of the American Underground, FM 23-series       |
+| 09 | Navigation & Terrain           | US Army Map Reading FM 3-25.26, Wilderness Navigation (Kjellstrom) |
+| 10 | Basic Electronics              | Make: Electronics (Platt), Practical Electronics for Inventors     |
+| 11 | Radio & Communication          | ARRL Ham Radio Handbook, Field Expedient Antennas                  |
+| 12 | Trauma & Field Surgery         | Where There Is No Doctor, Combat Medic Field Reference             |
+| 13 | Metalworking & Toolmaking      | The Backyard Blacksmith, Artist Blacksmith (Untracht)              |
+| 14 | Textiles & Handcraft           | Foxfire Book Series Vol.2, Back to Basics                          |
+| 15 | Mental Health & Group Dynamics | US Army Leadership FM 6-22, Deep Survival (Gonzales)               |
+
+
+lets move to next stage
+CORE OBJECTIVE
+
+Build a minimal, modern, dark-themed Streamlit interface that integrates with the existing RAG + LLM pipeline.
+
+The UI must feel:
+
+Clean
+Professional
+Engineering-focused
+Fully offline compatible
+
+Do not use emojis anywhere.
+
+DESIGN PRINCIPLES
+Minimalism over decoration
+Readability over aesthetics
+Consistent spacing and typography
+Modular components for future expansion
+
+COLOR SYSTEM (MANDATORY)
+
+Primary background: #0B0F14
+Secondary background: #11161C
+Accent: #1F6FEB (muted blue)
+Text primary: #E6EDF3
+Text secondary: #9BA7B4
+Border: #1C2128
+
+Optional highlight (use sparingly): #2EA043
+
+Avoid bright or saturated colors.
+
+TYPOGRAPHY
+
+Font style: clean sans-serif
+Prefer system fonts for performance
+
+CUSTOM CSS (REQUIRED)
+
+Inject CSS using st.markdown.
+
+Include:
+
+Dark background styling
+Rounded containers
+Subtle borders
+Hover effects for buttons
+Smooth spacing
+
+Optional:
+
+Glass effect for panels using backdrop blur
+Soft shadows (very minimal)
+
+LOGO REQUIREMENT
+
+Create a simple text-based logo:
+
+GRIDMIND (GOLDEN , BLACK TYPE)
+
+Style:
+
+Monospace or geometric font feel
+Slight letter spacing
+Subtle accent color on part of text
+
+No images required. Pure CSS/text.
+
+PERFORMANCE
+Avoid heavy UI components
+Keep rendering lightweight
+Ensure smooth operation on low-end CPU systems
+
+
+FINAL RULE
+
+UI must reflect the purpose of GridMind:
+A serious, offline, survival-focused system built for real-world constraints.
+Avoid anything that looks playful or consumer-app styled.
+
+Start implementation now.
