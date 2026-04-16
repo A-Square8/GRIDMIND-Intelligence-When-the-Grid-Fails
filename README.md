@@ -3,6 +3,18 @@
 ## **Overview**
 GridMind is an offline AI survival assistant that works without internet. It stores knowledge across multiple areas such as water purification, food finding, shelter building, first aid, navigation, repair skills, communication, and emergency planning. New documents can be added anytime, and the system updates its knowledge without rebuilding everything from scratch. It is optimized to run on normal CPU hardware, making it useful on laptops or low-power devices. GridMind also includes a clean terminal-style dashboard for fast and practical use in off-grid situations.
 
+## Features
+
+- Fully offline AI assistant  
+- Runs on CPU hardware  
+- Uses local LLM + embeddings  
+- Multi-domain survival knowledge base  
+- Fast semantic retrieval with FAISS  
+- Incremental indexing for new files  
+- CLI interface  
+- Streamlit dashboard  
+- Easy to expand and customize  
+
 ## **Models & Infrastructure**
 
 | Component | Technology / Model | Purpose |
