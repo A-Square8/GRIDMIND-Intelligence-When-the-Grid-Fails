@@ -1,7 +1,7 @@
-"""
-GridMind LLM Engine — Stage 1
-Modular backend abstraction with lazy loading and streaming support.
-"""
+
+# GridMind LLM Engine
+# Modular backend abstraction with lazy loading and streaming support.
+
 
 from __future__ import annotations
 
@@ -16,9 +16,8 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-# ---------------------------------------------------------------------------
 # Abstract base
-# ---------------------------------------------------------------------------
+
 
 class LLMBackend(ABC):
     """Abstract base class for LLM inference backends."""
@@ -45,9 +44,9 @@ class LLMBackend(ABC):
         """Return True if the backend is operational."""
 
 
-# ---------------------------------------------------------------------------
+
 # Ollama backend (REST API)
-# ---------------------------------------------------------------------------
+
 
 class OllamaBackend(LLMBackend):
     """Ollama inference via its local REST API."""
@@ -65,14 +64,14 @@ class OllamaBackend(LLMBackend):
         self.n_threads = n_threads
         self._session: requests.Session | None = None
 
-    # -- lazy session --------------------------------------------------------
+
 
     def _get_session(self) -> requests.Session:
         if self._session is None:
             self._session = requests.Session()
         return self._session
 
-    # -- generate ------------------------------------------------------------
+ 
 
     def generate(
         self,
@@ -142,7 +141,7 @@ class OllamaBackend(LLMBackend):
             token_count / elapsed if elapsed else 0,
         )
 
-    # -- health check --------------------------------------------------------
+
 
     def health_check(self) -> bool:
         try:
@@ -152,7 +151,7 @@ class OllamaBackend(LLMBackend):
             resp.raise_for_status()
             models = [m["name"] for m in resp.json().get("models", [])]
             if self.model not in models:
-                # Ollama sometimes strips the `:latest` tag
+
                 base = self.model.split(":")[0]
                 if not any(m.startswith(base) for m in models):
                     logger.warning(
@@ -166,9 +165,9 @@ class OllamaBackend(LLMBackend):
             return False
 
 
-# ---------------------------------------------------------------------------
+
 # llama-cpp-python backend (direct GGUF loading)
-# ---------------------------------------------------------------------------
+
 
 class LlamaCppBackend(LLMBackend):
     """CPU-only GGUF inference via llama-cpp-python with lazy loading."""
@@ -186,11 +185,10 @@ class LlamaCppBackend(LLMBackend):
         self.n_gpu_layers = n_gpu_layers
         self._model = None  # lazy
 
-    # -- lazy model loading --------------------------------------------------
 
     def _get_model(self):
         if self._model is None:
-            from llama_cpp import Llama  # heavy import deferred
+            from llama_cpp import Llama  
 
             logger.info("Loading GGUF model from %s …", self.model_path)
             t0 = time.perf_counter()
@@ -204,7 +202,7 @@ class LlamaCppBackend(LLMBackend):
             logger.info("Model loaded in %.1fs", time.perf_counter() - t0)
         return self._model
 
-    # -- generate ------------------------------------------------------------
+
 
     def generate(
         self,
@@ -264,12 +262,12 @@ class LlamaCppBackend(LLMBackend):
             token_count / elapsed if elapsed else 0,
         )
 
-    # -- health check --------------------------------------------------------
+  
 
     def health_check(self) -> bool:
         try:
             model = self._get_model()
-            # Generate a single token to verify the model works
+
             output = model("Hello", max_tokens=1)
             return bool(output["choices"][0]["text"])
         except Exception as exc:
@@ -277,9 +275,7 @@ class LlamaCppBackend(LLMBackend):
             return False
 
 
-# ---------------------------------------------------------------------------
-# Factory
-# ---------------------------------------------------------------------------
+
 
 _BACKENDS = {
     "ollama": OllamaBackend,

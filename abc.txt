@@ -1,6 +1,6 @@
 test the retrival system 
 stage 4
-python3 main.py retrieve "I am six days into a solo wilderness trek and everything went wrong. A severe storm just destroyed my camp. I have a deep laceration on my forearm that looks heavily infected—it is red, swollen, and warm to the touch. I am completely out of clean water, but there is a murky, stagnant pond nearby. I have absolutely no medical supplies, no iodine, no commercial water filters, and no cell service. The only items I have left are a working lighter, a rusty metal cooking tin, the dirty t-shirt on my back, and pine sap from a nearby tree. How do I immediately manage this infected wound and safely hydrate myself from that pond so I survive the next 48 hours?" --top-k 8
+python3 main.py retrieve "I have been trapped for several weeks following massive regional flooding. The only water available is extremely murky, full of sediment, and likely contaminated with biological waste and agricultural runoff. I do not have a commercial water filter, iodine tablets, bleach, or any chemical treatment options. I do have several large 5-gallon plastic buckets, some old but clean cotton clothing, a shovel, access to unlimited sand and gravel, and a reliable fire. How can I build a permanent, heavy-duty filtration and purification system from scratch to make this highly contaminated water safe to drink over the long term?" --top-k 8
 
 
 
@@ -8,8 +8,11 @@ test llm response (rag+llm)
 stage 6
 python3 main.py ask "What are the early signs of radiation sickness?"
 
+add new pdfs
+python main.py index --incremental
 
-
+trigger streamlit dasboard
+streamlit run interface/app.py --server.port 8500
 
 
 | #  | Domain                         | Key Topics                                             |
@@ -50,85 +53,3 @@ python3 main.py ask "What are the early signs of radiation sickness?"
 | 15 | Mental Health & Group Dynamics | US Army Leadership FM 6-22, Deep Survival (Gonzales)               |
 
 
-lets move to next stage
-CORE OBJECTIVE
-
-Build a minimal, modern, dark-themed Streamlit interface that integrates with the existing RAG + LLM pipeline.
-
-The UI must feel:
-
-Clean
-Professional
-Engineering-focused
-Fully offline compatible
-
-Do not use emojis anywhere.
-
-DESIGN PRINCIPLES
-Minimalism over decoration
-Readability over aesthetics
-Consistent spacing and typography
-Modular components for future expansion
-
-COLOR SYSTEM (MANDATORY)
-
-Primary background: #0B0F14
-Secondary background: #11161C
-Accent: #1F6FEB (muted blue)
-Text primary: #E6EDF3
-Text secondary: #9BA7B4
-Border: #1C2128
-
-Optional highlight (use sparingly): #2EA043
-
-Avoid bright or saturated colors.
-
-TYPOGRAPHY
-
-Font style: clean sans-serif
-Prefer system fonts for performance
-
-CUSTOM CSS (REQUIRED)
-
-Inject CSS using st.markdown.
-
-Include:
-
-Dark background styling
-Rounded containers
-Subtle borders
-Hover effects for buttons
-Smooth spacing
-
-Optional:
-
-Glass effect for panels using backdrop blur
-Soft shadows (very minimal)
-
-LOGO REQUIREMENT
-
-Create a simple text-based logo:
-
-GRIDMIND (GOLDEN , BLACK TYPE)
-
-Style:
-
-Monospace or geometric font feel
-Slight letter spacing
-Subtle accent color on part of text
-
-No images required. Pure CSS/text.
-
-PERFORMANCE
-Avoid heavy UI components
-Keep rendering lightweight
-Ensure smooth operation on low-end CPU systems
-
-
-FINAL RULE
-
-UI must reflect the purpose of GridMind:
-A serious, offline, survival-focused system built for real-world constraints.
-Avoid anything that looks playful or consumer-app styled.
-
-Start implementation now.

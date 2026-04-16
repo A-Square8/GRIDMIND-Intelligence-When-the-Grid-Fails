@@ -1,7 +1,5 @@
-"""
-GridMind Document Loader — Stage 2
-File discovery and format-specific text extraction.
-"""
+
+#GridMind Document Loader 
 
 from __future__ import annotations
 
@@ -20,6 +18,7 @@ SUPPORTED_EXTENSIONS = {".pdf", ".txt", ".md"}
 def discover_files(
     base_dir: str | Path,
     extensions: set[str] | None = None,
+    target_files: set[str] | list[str] | None = None,
 ) -> list[dict]:
     """Walk *base_dir* and return file metadata grouped by domain folder.
 
@@ -32,12 +31,15 @@ def discover_files(
         raise FileNotFoundError(f"Base directory not found: {base}")
 
     exts = extensions or SUPPORTED_EXTENSIONS
+    target_set = set(target_files) if target_files else None
     files: list[dict] = []
 
     for path in sorted(base.rglob("*")):
         if not path.is_file():
             continue
         if path.suffix.lower() not in exts:
+            continue
+        if target_set is not None and str(path) not in target_set:
             continue
 
         try:
@@ -58,7 +60,6 @@ def discover_files(
 
 
 def _clean_text(text: str) -> str:
-    """Collapse excessive whitespace and strip control characters."""
 
     text = re.sub(r"\n{3,}", "\n\n", text)
     text = re.sub(r"[ \t]{2,}", " ", text)
@@ -68,7 +69,7 @@ def _clean_text(text: str) -> str:
 
 
 def _extract_pdf(path: str) -> str:
-    """Extract text from a PDF using pdfplumber."""
+
     import pdfplumber
 
     pages: list[str] = []
@@ -84,7 +85,7 @@ def _extract_pdf(path: str) -> str:
 
 
 def _extract_text_file(path: str) -> str:
-    """Read a plain text or markdown file."""
+
     p = Path(path)
 
     for encoding in ("utf-8", "latin-1"):
@@ -115,13 +116,13 @@ def extract_text(file_info: dict) -> str:
 
 
 
-def load_documents(base_dir: str | Path) -> list[dict]:
+def load_documents(base_dir: str | Path, target_files: set[str] | list[str] | None = None) -> list[dict]:
     """Discover files under *base_dir*, extract text, return document dicts.
 
     Each dict has keys: ``path``, ``domain``, ``format``, ``text``.
     Files that fail extraction are skipped with a warning.
     """
-    files = discover_files(base_dir)
+    files = discover_files(base_dir, target_files=target_files)
     documents: list[dict] = []
 
     for i, finfo in enumerate(files, 1):

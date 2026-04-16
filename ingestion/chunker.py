@@ -1,7 +1,7 @@
-"""
-GridMind Document Chunker — Stage 2
-Token-aware text chunking with overlap and metadata attachment.
-"""
+
+# GridMind Document Chunker
+# Token-aware text chunking with overlap and metadata attachment.
+
 
 from __future__ import annotations
 
@@ -11,13 +11,12 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-# Approximation: 1 token ≈ 0.75 words (conservative for English text).
+# Approximation 1 token ≈ 0.75 words 
 _WORDS_PER_TOKEN = 0.75
 
 
-# ---------------------------------------------------------------------------
 # Token estimation
-# ---------------------------------------------------------------------------
+
 
 def estimate_tokens(text: str) -> int:
     """Estimate the number of tokens in *text* using word-count heuristic."""
@@ -25,9 +24,9 @@ def estimate_tokens(text: str) -> int:
     return int(word_count / _WORDS_PER_TOKEN)
 
 
-# ---------------------------------------------------------------------------
+
 # Sentence splitting
-# ---------------------------------------------------------------------------
+
 
 _SENTENCE_RE = re.compile(
     r"(?<=[.!?])\s+(?=[A-Z])"  # split after sentence-ending punct + space + capital
@@ -40,9 +39,9 @@ def _split_sentences(text: str) -> list[str]:
     return [s.strip() for s in sentences if s.strip()]
 
 
-# ---------------------------------------------------------------------------
+
 # Chunking
-# ---------------------------------------------------------------------------
+
 
 def chunk_text(
     text: str,
@@ -75,7 +74,7 @@ def chunk_text(
 
         # If a single sentence exceeds chunk_size, force-split by words
         if sent_tokens > chunk_size:
-            # Flush current buffer first
+         
             if current_sentences:
                 chunks.append(" ".join(current_sentences))
                 current_sentences = []
@@ -88,11 +87,9 @@ def chunk_text(
                 chunks.append(" ".join(chunk_words))
             continue
 
-        # Would adding this sentence exceed the target?
         if current_tokens + sent_tokens > chunk_size and current_sentences:
             chunks.append(" ".join(current_sentences))
 
-            # Build overlap from the tail of current_sentences
             overlap_sentences: list[str] = []
             overlap_tokens = 0
             for s in reversed(current_sentences):
@@ -108,21 +105,20 @@ def chunk_text(
         current_sentences.append(sentence)
         current_tokens += sent_tokens
 
-    # Flush remaining
+
     if current_sentences:
         chunks.append(" ".join(current_sentences))
 
     return chunks
 
 
-# ---------------------------------------------------------------------------
+
 # Document chunking with metadata
-# ---------------------------------------------------------------------------
+
 
 def _make_chunk_id(domain: str, filename: str, index: int) -> str:
     """Create a deterministic chunk ID from domain, filename, and index."""
     stem = Path(filename).stem
-    # Sanitise for use as an ID component
     safe_stem = re.sub(r"[^a-zA-Z0-9_-]", "_", stem)[:60]
     return f"{domain}__{safe_stem}__{index:04d}"
 
