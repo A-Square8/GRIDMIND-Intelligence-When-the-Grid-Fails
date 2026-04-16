@@ -36,13 +36,17 @@ pip install -r requirements.txt
 ```
 
 **2. Select and Configure Backend (Ollama Recommended)**
-**Download & Install:** Visit [ollama.com](https://ollama.com/) and follow the install instructions for your OS.
-**Pull Required Weights:** Open your terminal and run:
-    ```bash
-    ollama pull qwen2.5:3b        # For text generation
-    ollama pull nomic-embed-text # For document embeddings
-    ```
-**Verify Service:** Ensure the Ollama service is running (check your system tray or run `ollama list`).
+a. **Download & Install Ollama**  
+   Visit [ollama.com](https://ollama.com/) and follow the installation instructions for your operating system.
+
+b. **Pull Required Models**  
+   Open your terminal and run the following commands:
+   ```bash
+   ollama pull qwen2.5:3b          # For text generation
+   ollama pull nomic-embed-text    # For document embeddings
+```
+
+c. **Verify Service:** Ensure the Ollama service is running (check your system tray or run `ollama list`).
 
 
 **3. Launch the Assistant**
