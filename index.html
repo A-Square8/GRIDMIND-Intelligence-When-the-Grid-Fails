@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRIDMIND | Intelligence When the Grid Fails</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --black: #050505;
+            --gray: #1a1a1a;
+            --white: #f5f5f5;
+            --accent: #FFD700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(212, 175, 55, .08), transparent 30%),
+                radial-gradient(circle at 80% 40%, rgba(212, 175, 55, .05), transparent 25%),
+                radial-gradient(circle at 50% 80%, rgba(212, 175, 55, .04), transparent 30%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #d0d0d0;
+        }
+
+        .gold-text {
+            color: var(--gold);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #161616 0%, #050505 70%);
+        }
+
+        .hero h1 {
+            font-size: 6rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 1rem;
+            background: linear-gradient(to bottom, #FFD700, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        .hero p {
+            font-size: 1.35rem;
+            max-width: 760px;
+            color: #999;
+            animation: fadeUp 1.2s ease forwards;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, .03);
+            border: 1px solid rgba(212, 175, 55, .18);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            transition: .35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 215, 0, .08), transparent 40%);
+            opacity: 0;
+            transition: .35s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .alt-bg {
+            background: #0a0a0a;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .comp-box {
+            padding: 2rem;
+            border-radius: 14px;
+            transition: .3s ease;
+        }
+
+        .comp-box:hover {
+            transform: translateY(-6px);
+        }
+
+        .comp-standard {
+            border-left: 4px solid #444;
+            background: rgba(255, 255, 255, .02);
+        }
+
+        .comp-gridmind {
+            border-left: 4px solid var(--gold);
+            background: rgba(212, 175, 55, .06);
+        }
+
+        .comp-label {
+            display: block;
+            font-size: .8rem;
+            font-weight: 700;
+            opacity: .7;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .arch-img-p {
+            width: 100%;
+            margin-top: 2rem;
+            border: 1px solid rgba(212, 175, 55, .4);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+        }
+
+        .arch-img-p img {
+            width: 100%;
+            display: block;
+            transition: transform .6s ease;
+        }
+
+        .arch-img-p:hover img {
+            transform: scale(1.03);
+        }
+
+        .prompts-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .prompt-tag {
+            background: var(--gray);
+            border: 1px solid #333;
+            padding: .95rem 1.3rem;
+            border-radius: 999px;
+            font-size: .92rem;
+            transition: .3s ease;
+        }
+
+        .prompt-tag:hover {
+            background: var(--gold);
+            color: var(--black);
+            transform: translateY(-4px);
+        }
+
+        .interface-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .interface-gallery img {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid rgba(212, 175, 55, .22);
+            transition: .35s ease;
+        }
+
+        .interface-gallery img:hover {
+            transform: scale(1.03);
+            border-color: var(--gold);
+        }
+
+        footer {
+            padding: 4rem 0;
+            border-top: 1px solid #222;
+            text-align: center;
+            color: #666;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            animation: fadeUp .9s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: .1s;
+        }
+
+        .delay-2 {
+            animation-delay: .25s;
+        }
+
+        .delay-3 {
+            animation-delay: .4s;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 8px rgba(212, 175, 55, .2));
+            }
+
+            to {
+                filter: drop-shadow(0 0 20px rgba(212, 175, 55, .45));
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(35px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media(max-width:768px) {
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 4rem 0;
+            }
+
+            h2 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="hero">
+        <div class="container">
+            <h1>GRIDMIND</h1>
+            <p>High-Precision Survival Intelligence for the Off-Grid World.</p>
+        </div>
+    </section>
+
+    <section id="system">
+        <div class="container">
+            <h2>What the system does</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3 class="gold-text">Offline RAG</h3>
+                    <p>Uses Retrieval-Augmented Generation to anchor AI responses in verified local survival manuals,
+                        eliminating hallucinations when lives are on the line.</p>
+                </div>
+                <div class="card">
+                    <h3 class="gold-text">CPU Optimized</h3>
+                    <p>Designed to run on commodity hardware (laptops, Pi-based systems) using quantized GGUF models,
+                        ensuring availability without massive GPUs.</p>
+                </div>
+                <div class="card">
+                    <h3 class="gold-text">Modular Ingestion</h3>
+                    <p>Instant knowledge base expansion via SHA-256 fingerprinting. Add new manuals and sync in seconds
+                        without full re-indexing.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+     <section id="vision" style="background: #0a0a0a;">
+        <div class="container">
+            <div style="max-width: 800px;">
+                <h2>Why this project?</h2>
+                <p style="font-size: 1.25rem; margin-top: 1.5rem;">
+                    In a world increasingly dependent on centralized cloud AI, <span class="gold-text">GridMind</span>
+                    solves the "Reliability Gap." It provides sovereign intelligence that works when the power is out,
+                    the internet is dead, and help is not coming. It turns static PDF libraries into a dynamic, situated
+                    reasoning engine.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="comparison">
+        <div class="container">
+            <h2>Standard LLM vs. GRIDMIND</h2>
+            <p class="gold-text" style="margin-bottom: 2rem;">Query: "Can I eat bread that expired 3 days ago?"</p>
+
+            <div class="comparison-grid">
+                <div class="comp-box comp-standard">
+                    <span class="comp-label">Standard LLM (Cloud-based)</span>
+                    <p>No. Bread past its recommended date may be unsafe to consume. It is best to discard expired food
+                        products and obtain a fresh source of food.</p>
+                    <p style="color: #666; font-size: 0.9rem; margin-top: 1rem;">Result: <span
+                            style="color: #ff4d4d;">Low Practical Value.</span> Gives generic safety advice without
+                        considering scarcity or context.</p>
+                </div>
+
+                <div class="comp-box comp-gridmind">
+                    <span class="comp-label">GRIDMIND (Survival RAG)</span>
+                    <p><strong>Field Assessment:</strong><br>
+                        1. <strong>Inspect:</strong> Check for green, black, or fuzzy mold spots.<br>
+                        2. <strong>Smell:</strong> If sour, fermented, or unusual odor is present, discard.<br>
+                        3. <strong>Texture:</strong> If dry or stale only, it is generally usable.<br>
+                        4. <strong>Use Fast:</strong> Consume soon after inspection or toast before use.<br>
+                        <strong>Judgment:</strong> Same facts, survival-calibrated decision making.
+                    </p>
+                    <p style="color: #666; font-size: 0.9rem; margin-top: 1rem;">Result: <span
+                            style="color: #2ecc71;">Actionable Intelligence.</span> Applies context-aware reasoning when
+                        alternatives are limited.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="alt-bg">
+        <div class="container">
+            <h2 class="reveal">System Architecture</h2>
+            <div class="arch-img-p reveal delay-1">
+                <img src="web_src/architecture_diagram.png" alt="Architecture">
+            </div>
+            <p style="margin-top:1rem;color:#777;">Scatter-gather retrieval pipeline across fragmented offline knowledge
+                bases.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2 class="reveal">Sample Prompts</h2>
+
+            <div class="prompts-container">
+                <div class="prompt-tag reveal delay-1">Early signs of radiation sickness</div>
+                <div class="prompt-tag reveal delay-1">Field dressing a severe laceration</div>
+                <div class="prompt-tag reveal delay-2">Build a solar still from plastic</div>
+                <div class="prompt-tag reveal delay-2">Identify edible forest mushrooms</div>
+                <div class="prompt-tag reveal delay-3">Purify murky river water</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="alt-bg">
+        <div class="container">
+            <h2 class="reveal">Sample Interface</h2>
+            <p class="gold-text reveal delay-1">Terminal-style dashboard for fast offline use.</p>
+
+            <div class="interface-gallery">
+                <img class="reveal delay-1" src="web_src/sample_query1.png" alt="UI 1">
+                <img class="reveal delay-2" src="web_src/sample_query2.png" alt="UI 2">
+                <img class="reveal delay-3" src="web_src/sample_query3.png" alt="UI 3">
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 GRIDMIND — Intelligence When the Grid Fails.</p>
+            <p style="font-size:.9rem;margin-top:.4rem;">Powered by Qwen 2.5 & FAISS Local RAG Pipeline.</p>
+            <p style="margin-top:.5rem;">
+                GitHub:
+                <a href="https://github.com/A-Square8/GRIDMIND-Intelligence-When-the-Grid-Fails">GRIDMIND</a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
