@@ -36,18 +36,27 @@ pip install -r requirements.txt
 ```
 
 **2. Select and Configure Backend (Ollama Recommended)**
-i.  **Download & Install:** Visit [ollama.com](https://ollama.com/) and follow the install instructions for your OS.
-ii.  **Pull Required Weights:** Open your terminal and run:
+**Download & Install:** Visit [ollama.com](https://ollama.com/) and follow the install instructions for your OS.
+**Pull Required Weights:** Open your terminal and run:
     ```bash
     ollama pull qwen2.5:3b        # For text generation
     ollama pull nomic-embed-text # For document embeddings
     ```
-iii.  **Verify Service:** Ensure the Ollama service is running (check your system tray or run `ollama list`).
+**Verify Service:** Ensure the Ollama service is running (check your system tray or run `ollama list`).
 
 
 **3. Launch the Assistant**
 ```bash
 streamlit run interface/app.py --server.port 8500
+```
+
+**4. CLI commands**
+```bash
+python main.py index                    # Full indexing
+python main.py index --incremental      # Incremental update
+python main.py ask "your question"      # Get RAG-powered answer
+python main.py retrieve "query" --top-k 8   # Test retrieval only
+python main.py llm                      # Test raw LLM
 ```
 
 ## **Note: Knowledge Base Modification**
