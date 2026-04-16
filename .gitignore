@@ -10,7 +10,6 @@ venv.bak/
 stages/
 raw_docs_test/
 doc/
-raw_docs/
 
 
 __pycache__/
