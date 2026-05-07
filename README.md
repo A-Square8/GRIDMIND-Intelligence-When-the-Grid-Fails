@@ -20,7 +20,7 @@ A fully offline AI assistant for survival scenarios — no internet, no cloud, n
 
 When power grids fail, internet goes down. When internet goes down, your AI tools go with it.
 GridMind is built for exactly that moment — a RAG-powered local AI that runs entirely on CPU,
-works offline, and answers survival-critical questions in seconds.
+works offline, and answers survival-critical questions in minutes.
 
 
 <!--## Demo
