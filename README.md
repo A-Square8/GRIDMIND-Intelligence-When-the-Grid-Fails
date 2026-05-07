@@ -1,95 +1,121 @@
-# **GridMind: Intelligence When the Grid Fails**
+<div align="center">
 
-## **Overview**
-GridMind is an offline AI survival assistant that works without internet. It stores knowledge across multiple areas such as water purification, food finding, shelter building, first aid, navigation, repair skills, communication, and emergency planning. New documents can be added anytime, and the system updates its knowledge without rebuilding everything from scratch. It is optimized to run on normal CPU hardware, making it useful on laptops or low-power devices. GridMind also includes a clean terminal-style dashboard for fast and practical use in off-grid situations.
+# GridMind
+### Intelligence When the Grid Fails
 
-## Features
+A fully offline AI assistant for survival scenarios — no internet, no cloud, no compromise.
 
-- Fully offline AI assistant  
-- Runs on CPU hardware  
-- Uses local LLM + embeddings  
-- Multi-domain survival knowledge base  
-- Fast semantic retrieval with FAISS  
-- Incremental indexing for new files  
-- CLI interface  
-- Streamlit dashboard  
-- Easy to expand and customize  
-
-## **Models & Infrastructure**
-
-| Component | Technology / Model | Purpose |
-| :--- | :--- | :--- |
-| **Generative Model** | `qwen2.5:3b` | Used via Ollama or `llama.cpp` for core LLM inference and response generation. |
-| **Embedding Model** | `nomic-embed-text` | Generates document embeddings locally to facilitate semantic search. |
-| **Vector Store** | `FAISS (cpu)` | Enables high-speed, CPU-optimized vector similarity search for retrieving offline context. |
-
-## **Dependencies**
-- **Python 3.10+**
-- `llama-cpp-python>=0.3.0`
-- `requests>=2.31.0`
-- `pdfplumber>=0.10.0`
-- `faiss-cpu>=1.7.4`
-- `streamlit`
-
-*See `requirements.txt` for complete environment details.*
-
-## **System Architecture**
-
-<img width="1599" height="929" alt="image" src="https://github.com/user-attachments/assets/12fd8f1d-28af-4778-9d96-3cd6e246713e" />
+![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-Powered-black)
+![FAISS](https://img.shields.io/badge/FAISS-CPU_Optimized-orange)
+![Streamlit](https://img.shields.io/badge/UI-Streamlit-red?logo=streamlit)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 
-## **Instructions**
+</div>
 
-**1. Setup Environment**
+
+
+## The Problem
+
+When power grids fail, internet goes down. When internet goes down, your AI tools go with it.
+GridMind is built for exactly that moment — a RAG-powered local AI that runs entirely on CPU,
+works offline, and answers survival-critical questions in seconds.
+
+
+<!--## Demo
+
+> Record a 30-second terminal session using asciinema or a screen recorder and drop the GIF here.-->
+
+
+
+## What Makes It Different
+
+| Feature | GridMind | Typical Chatbot |
+|---|---|---|
+| Internet required | No | Yes |
+| Runs on CPU | Yes | Requires GPU or cloud |
+| Custom knowledge base | Drop in any PDF | Fixed training data |
+| Incremental indexing | SHA-256 diff, no rebuild | Full rebuild |
+| Deployment target | Laptop, Raspberry Pi | Server |
+
+
+
+## Architecture
+
+![architecture](https://github.com/user-attachments/assets/12fd8f1d-28af-4778-9d96-3cd6e246713e)
+
+
+| Component | Model / Tool | Role |
+|---|---|---|
+| LLM | qwen2.5:3b via Ollama | Response generation |
+| Embeddings | nomic-embed-text | Semantic search |
+| Vector Store | FAISS (cpu) | Fast retrieval |
+| UI | Streamlit | Dashboard |
+
+
+
+## Knowledge Domains
+
+Water purification, food sourcing, shelter building, first aid,
+navigation, equipment repair, emergency communication, disaster planning.
+
+All source material belongs to respective authors and publishers.
+
+
+
+## Setup
+
+Requirements: Python 3.10+, [Ollama](https://ollama.com/)
+
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+# Clone and install
+git clone https://github.com/A-Square8/GRIDMIND-Intelligence-When-the-Grid-Fails
+cd GRIDMIND-Intelligence-When-the-Grid-Fails
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-```
 
-**2. Select and Configure Backend (Ollama Recommended)**
-a. **Download & Install Ollama**  
-   Visit [ollama.com](https://ollama.com/) and follow the installation instructions for your operating system.
+# Pull models
+ollama pull qwen2.5:3b
+ollama pull nomic-embed-text
 
-b. **Pull Required Models**  
-   Open your terminal and run the following commands:
-   ```bash
-   ollama pull qwen2.5:3b          # For text generation
-   ollama pull nomic-embed-text    # For document embeddings
-```
-
-c. **Verify Service:** Ensure the Ollama service is running (check your system tray or run `ollama list`).
-
-
-**3. Launch the Assistant**
-```bash
+# Index knowledge base and launch
+python main.py index
 streamlit run interface/app.py --server.port 8500
 ```
 
-**4. CLI commands**
+
+
+## Usage
+
 ```bash
-python main.py index                    # Full indexing
-python main.py index --incremental      # Incremental update
-python main.py ask "your question"      # Get RAG-powered answer
-python main.py retrieve "query" --top-k 8   # Test retrieval only
-python main.py llm                      # Test raw LLM
+python main.py index                          # Full index build
+python main.py index --incremental            # Add new docs only
+python main.py ask "how to purify water"      # Ask a question
+python main.py retrieve "shelter" --top-k 8  # Test retrieval
+python main.py llm                            # Test raw LLM
 ```
 
-## **Note: Knowledge Base Modification**
-Users are completely free to modify, customize, and add to the knowledge base as they see fit to tailor GridMind to their specific survival scenarios.
+**Expanding the knowledge base**
 
-You can instantly expand the offline knowledge base by adding relevant documents, books, or field manuals into the `raw_docs/` folder. Afterward, run:
+Drop any PDF or text file into `raw_docs/` and run:
 
 ```bash
 python3 main.py index --incremental
 ```
 
-This triggers the optimized incremental indexing process using SHA-256 hashing. It will only process the new additions and merge them seamlessly into the existing FAISS vector database.
-
-<img width="1917" height="914" alt="sample_query1" src="https://github.com/user-attachments/assets/2e4317cd-ebec-43a2-83f4-7783fd829e55" />
-
-<img width="1654" height="805" alt="sample_query2" src="https://github.com/user-attachments/assets/6611765a-5014-44c5-bf93-1d548f8e058e" />
+Only new files are processed. The existing FAISS index is preserved.
 
 
-## **Note**
-GridMind is open for the community to modify, expand, and experiment with based on their own needs and survival scenarios. Users can add new documents, improve existing knowledge, or adapt the system for different environments and use cases. Credit for all source books, manuals, and reference materials belongs to their respective authors and publishers.
+
+## Sample Output
+
+![query1](https://github.com/user-attachments/assets/2e4317cd-ebec-43a2-83f4-7783fd829e55)
+![query2](https://github.com/user-attachments/assets/6611765a-5014-44c5-bf93-1d548f8e058e)
+
+
+
+## Contributing
+
+Open to modifications, new knowledge domains, and improvements.
+If you add something useful, a pull request is welcome.
