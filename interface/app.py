@@ -11,13 +11,14 @@ st.markdown("""
 <style>
     /* Mandatory Color System */
     :root {
-        --bg-primary: #0B0F14;
-        --bg-secondary: #11161C;
-        --accent: #1F6FEB;
-        --text-primary: #E6EDF3;
-        --text-secondary: #9BA7B4;
-        --border: #1C2128;
-        --highlight: #2EA043;
+        --bg-primary: #000000;
+        --bg-secondary: #0D0D0D;
+        --accent: #D4AF2A;
+        --text-primary: #F2F2F2;
+        --text-secondary: #B8B8B8;
+        --border: #2A2A2A;
+        --highlight: #E0B92E;
+        --nav-text: #7A7A7A;
     }
 
     .stApp {
@@ -92,7 +93,7 @@ st.markdown("""
         margin-bottom: 20px;
     }
     .gridmind-logo span {
-        color: #D4AF37 !important; /* Golden accent */
+        color: var(--accent) !important; /* Golden accent */
     }
     
     hr {
@@ -104,7 +105,7 @@ st.markdown("""
 # Sidebar
 st.sidebar.markdown("""
 <div class="gridmind-logo">
-    <span style="color: #D4AF37;">GRID</span>MIND
+    <span style="color: #D4AF2A;">GRID</span>MIND
 </div>
 """, unsafe_allow_html=True)
 st.sidebar.markdown("**STATUS:** OFFLINE")
