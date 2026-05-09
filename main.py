@@ -257,7 +257,7 @@ def main() -> None:
     index_p.add_argument("--docs-dir", default=None)
     index_p.add_argument("--store-dir", default=None)
     index_p.add_argument("--model", default=None)
-    index_p.add_argument("--batch-size", type=int, default=32)
+    index_p.add_argument("--batch-size", type=int, default=8)
     index_p.add_argument("--incremental", action="store_true", help="Perform incremental append using file hashing")
 
     retrieve_p = sub.add_parser("retrieve", help="Stage 4 — Test retrieval system")

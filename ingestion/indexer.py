@@ -9,7 +9,7 @@ from core.embeddings import OllamaEmbedder
 logger = logging.getLogger(__name__)
 DEFAULT_STORE_DIR = Path(__file__).resolve().parent.parent / "data" / "vector_store"
 
-def build_index(chunks: list[dict], embedder: OllamaEmbedder, batch_size: int = 32, output_dir: str | Path | None = None):
+def build_index(chunks: list[dict], embedder: OllamaEmbedder, batch_size: int = 8, output_dir: str | Path | None = None):
     store = Path(output_dir or DEFAULT_STORE_DIR)
     store.mkdir(parents=True, exist_ok=True)
     t0 = time.perf_counter()
@@ -30,17 +30,54 @@ def build_index(chunks: list[dict], embedder: OllamaEmbedder, batch_size: int = 
     return index, metadata
 
 def load_index(store_dir: str | Path | None = None):
+    """Load FAISS index (memory-mapped) and metadata (text-stripped for RAM savings).
+
+    Returns (index, metadata_list) where metadata entries do NOT contain
+    'text' — use load_chunk_texts() to fetch text on demand.
+    """
     store = Path(store_dir or DEFAULT_STORE_DIR)
-    index = faiss.read_index(str(store / "index.faiss"))
+    # Memory-map the FAISS index instead of loading into RAM
+    index = faiss.read_index(str(store / "index.faiss"), faiss.IO_FLAG_MMAP)
     with open(store / "metadata.json", "r", encoding="utf-8") as f:
-        metadata = json.load(f)
-    logger.info("Loaded index: %d vectors", index.ntotal)
+        raw_metadata = json.load(f)
+
+    # Strip text from in-memory metadata to save ~40-80MB of heap
+    metadata = []
+    for entry in raw_metadata:
+        metadata.append({
+            "chunk_id": entry["chunk_id"],
+            "source_file": entry["source_file"],
+            "domain": entry["domain"],
+            "token_count": entry["token_count"],
+        })
+
+    logger.info("Loaded index: %d vectors (mmap), metadata: %d entries (text-stripped)", index.ntotal, len(metadata))
     return index, metadata
+
+
+def load_chunk_texts(indices: list[int], store_dir: str | Path | None = None) -> dict[int, str]:
+    """Load text for specific chunk indices on demand.
+
+    Returns a dict mapping index -> text string.
+    Only reads the full metadata file once per call, extracting just the needed texts.
+    """
+    store = Path(store_dir or DEFAULT_STORE_DIR)
+    needed = set(indices)
+
+    texts: dict[int, str] = {}
+    with open(store / "metadata.json", "r", encoding="utf-8") as f:
+        all_meta = json.load(f)
+
+    for idx in needed:
+        if 0 <= idx < len(all_meta):
+            texts[idx] = all_meta[idx].get("text", "")
+
+    return texts
 
 def incremental_index(
     docs_dir: str | Path,
     embedder: OllamaEmbedder,
-    batch_size: int = 32,
+    batch_size: int = 8,
     store_dir: str | Path | None = None,
 ):
     from ingestion.watcher import FileWatcher
@@ -73,9 +110,11 @@ def incremental_index(
     index_path = store / "index.faiss"
     metadata_path = store / "metadata.json"
     
-    # Load exisiting FAISS if it exists
+    # Load existing FAISS if it exists (use regular read for modification)
     if index_path.exists() and metadata_path.exists():
-        index, metadata = load_index(store_dir)
+        index = faiss.read_index(str(index_path))
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            metadata = json.load(f)
     else:
         index = None
         metadata = []

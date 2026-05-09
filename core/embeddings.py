@@ -27,11 +27,11 @@ class OllamaEmbedder:
 
     def embed(self, text: str) -> np.ndarray:
         resp = self._get_session().post(
-            f"{self.base_url}/api/embed", json={"model": self.model, "input": text}, timeout=120)
+            f"{self.base_url}/api/embed", json={"model": self.model, "input": text, "keep_alive": 0}, timeout=120)
         resp.raise_for_status()
         return np.array(resp.json()["embeddings"][0], dtype=np.float32)
 
-    def embed_batch(self, texts: Sequence[str], batch_size: int = 32) -> np.ndarray:
+    def embed_batch(self, texts: Sequence[str], batch_size: int = 8) -> np.ndarray:
         all_vecs = []
         total = len(texts)
         t0 = time.perf_counter()

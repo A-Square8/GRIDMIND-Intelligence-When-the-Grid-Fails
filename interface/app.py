@@ -158,3 +158,8 @@ if prompt := st.chat_input("Enter command sequence..."):
                 st.error(f"FAILURE: {str(e)}")
                 
         st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+    # Cap chat history to prevent unbounded memory growth on constrained devices
+    MAX_HISTORY = 20
+    if len(st.session_state.messages) > MAX_HISTORY:
+        st.session_state.messages = st.session_state.messages[-MAX_HISTORY:]

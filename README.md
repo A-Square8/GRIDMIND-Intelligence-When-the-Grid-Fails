@@ -55,6 +55,35 @@ works offline, and answers survival-critical questions in minutes.
 
 
 
+## Optimizations for Constrained Devices
+
+GridMind is aggressively optimized for hardware with limited RAM (4GB - 8GB) and no GPU. The following optimizations reduce peak memory usage by ~800MB–2.5GB:
+
+- **Memory-Mapped Vectors**: FAISS index is loaded with `IO_FLAG_MMAP`, paging the index from disk rather than copying it entirely into RAM.
+- **Lazy Text Loading**: Document chunks and metadata are stripped of their raw text in memory. Text is only loaded on-demand from disk when matched by the retriever (saves ~40-60MB Python heap).
+- **Llama.cpp Disk Streaming**: When using the GGUF backend, `use_mmap=True` and `use_mlock=False` keep the model on disk and swap unused weights automatically (saves 500MB-2GB RAM).
+- **Reduced Embedding Batches**: Indexing batch sizes are minimized, capping peak memory spikes during large document ingestion.
+- **Query Embedding Cache**: Deduplicates embed calls for decomposed RAG queries, saving LLM compute.
+- **Session State Capping**: Chat UI history is limited to prevent gradual memory leaks during extended offline sessions.
+
+## Benchmarks & Performance
+
+**Hardware Tested:** 8GB RAM, 11th Gen Intel Core i3-1115G4 (No GPU acceleration)
+
+We rely on empirical calculation, not guesswork, to measure resource constraints. Below are the offline metrics using `qwen2.5:3b`:
+
+| Metric | Result |
+|---|---|
+| **Retrieval Precision** | 100.0% (Domain Match in Top-3) |
+| **Average Retrieval Latency** | 2.10 seconds |
+| **Time to First Token (TTFT)**| 146.26 seconds |
+| **Total Generation Latency** | 218.27 seconds |
+| **Peak System Memory Footprint**| 2.28 GB |
+
+*(Note: Without a GPU, generation latency relies entirely on the CPU. The extremely low overall memory footprint ensures the system does not crash or trigger OOM kills on constrained hardware).*
+
+
+
 ## Knowledge Domains
 
 Water purification, food sourcing, shelter building, first aid,

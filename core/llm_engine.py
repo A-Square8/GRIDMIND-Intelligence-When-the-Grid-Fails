@@ -77,7 +77,7 @@ class OllamaBackend(LLMBackend):
         self,
         prompt: str,
         *,
-        max_tokens: int = 2048,
+        max_tokens: int = 512,
         temperature: float = 0.7,
         top_p: float = 0.9,
         stop: list[str] | None = None,
@@ -93,6 +93,8 @@ class OllamaBackend(LLMBackend):
                 "temperature": temperature,
                 "top_p": top_p,
                 "num_ctx": self.n_ctx,
+                "low_vram": True,
+                "num_batch": 256,
             },
         }
         if self.n_threads is not None:
@@ -176,13 +178,15 @@ class LlamaCppBackend(LLMBackend):
         self,
         model_path: str,
         n_ctx: int = 2048,
-        n_threads: int = 4,
+        n_threads: int = 2,
         n_gpu_layers: int = 0,
+        n_batch: int = 128,
     ) -> None:
         self.model_path = model_path
         self.n_ctx = n_ctx
         self.n_threads = n_threads
         self.n_gpu_layers = n_gpu_layers
+        self.n_batch = n_batch
         self._model = None  # lazy
 
 
@@ -197,6 +201,9 @@ class LlamaCppBackend(LLMBackend):
                 n_ctx=self.n_ctx,
                 n_threads=self.n_threads,
                 n_gpu_layers=self.n_gpu_layers,
+                n_batch=self.n_batch,
+                use_mmap=True,
+                use_mlock=False,
                 verbose=False,
             )
             logger.info("Model loaded in %.1fs", time.perf_counter() - t0)
@@ -208,7 +215,7 @@ class LlamaCppBackend(LLMBackend):
         self,
         prompt: str,
         *,
-        max_tokens: int = 2048,
+        max_tokens: int = 512,
         temperature: float = 0.7,
         top_p: float = 0.9,
         stop: list[str] | None = None,
