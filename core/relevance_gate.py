@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 
 class RelevanceGate:
-    def __init__(self, distance_threshold=1.8, keyword_overlap_threshold=0.15):
+    def __init__(self, distance_threshold=0.72, keyword_overlap_threshold=0.15):
         self.distance_threshold = distance_threshold
         self.keyword_overlap_threshold = keyword_overlap_threshold
         self.stopwords = {
@@ -28,15 +28,22 @@ class RelevanceGate:
             if best_distance > self.distance_threshold:
                 return "NO_MATCH"
 
-        query_words = set(
-            w.lower() for w in query.split()
-            if w.lower() not in self.stopwords and len(w) > 2
-        )
+        # Strip punctuation from query words for clean matching
+        query_words = set()
+        for w in query.split():
+            clean_w = "".join(char for char in w if char.isalnum()).lower()
+            if clean_w not in self.stopwords and len(clean_w) > 2:
+                query_words.add(clean_w)
+
         if not query_words:
             return "PASS"
 
+        # Strip punctuation from chunk words
         chunk_text = " ".join(c.get("text", "") for c in chunks).lower()
-        chunk_words = set(chunk_text.split())
+        chunk_words = set(
+            "".join(char for char in w if char.isalnum())
+            for w in chunk_text.split()
+        )
 
         overlap = len(query_words & chunk_words) / len(query_words)
 
