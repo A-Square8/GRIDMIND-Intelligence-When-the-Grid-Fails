@@ -45,13 +45,35 @@ async function handleSend() {
         const decoder = new TextDecoder();
         statusDiv.textContent = '[SYS] Streaming output...';
         
+        let fullText = "";
+        let metaParsed = false;
+        
         while (true) {
             const {done, value} = await reader.read();
             if (done) break;
-            contentDiv.textContent += decoder.decode(value, {stream: true});
+            
+            fullText += decoder.decode(value, {stream: true});
+            
+            if (!metaParsed && fullText.includes('__META_END__\n')) {
+                const metaEndIdx = fullText.indexOf('__META_END__\n') + '__META_END__\n'.length;
+                const metaBlock = fullText.substring(0, metaEndIdx);
+                fullText = fullText.substring(metaEndIdx);
+                metaParsed = true;
+                
+                try {
+                    const jsonStr = metaBlock.replace('__META__:', '').replace('__META_END__\n', '');
+                    const metaObj = JSON.parse(jsonStr);
+                    statusDiv.innerHTML = `[SYS] Stream Complete. <br><span style="color:#d4af2a;">MODE:</span> ${metaObj.mode} | <span style="color:#d4af2a;">URGENCY:</span> ${metaObj.urgency} <br><span style="color:#d4af2a;">PERSONA:</span> ${metaObj.persona}`;
+                } catch(e) {
+                    console.error("Meta parse error", e);
+                }
+            }
+            
+            if (metaParsed) {
+                contentDiv.textContent = fullText;
+            }
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-        statusDiv.textContent = '[SYS] Output complete.';
     } catch (err) {
         statusDiv.textContent = '[ERR] Critical Failure';
         contentDiv.textContent = err.message;

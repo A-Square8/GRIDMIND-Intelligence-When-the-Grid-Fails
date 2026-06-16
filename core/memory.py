@@ -12,10 +12,12 @@ class ConversationMemory:
         if not self.history:
             return ""
         
-        ctx = "PREVIOUS CONTEXT:\n"
+        ctx = "PREVIOUS CONTEXT (SUMMARY):\n"
         for turn in self.history:
             ctx += f"User: {turn['user']}\n"
-            ctx += f"Assistant: {turn['assistant']}\n"
+            clean_ast = turn['assistant'].replace('\n', ' ')
+            snippet = clean_ast[:200] + "..." if len(clean_ast) > 200 else clean_ast
+            ctx += f"Assistant previously advised: {snippet}\n"
         ctx += "\n"
         return ctx
         

@@ -70,6 +70,14 @@ class RAGPipeline:
         
         final_prompt = f"{system_prompt}\n\n{memory_ctx}User Question: {user_query}\nAnswer:"
         
+        import json
+        meta = {
+            "mode": classification['mode'],
+            "urgency": classification['urgency'],
+            "persona": classification['persona']
+        }
+        yield f"__META__:{json.dumps(meta)}__META_END__\n"
+        
         response_chunks = []
         for chunk in self.llm.generate(final_prompt):
             response_chunks.append(chunk)
