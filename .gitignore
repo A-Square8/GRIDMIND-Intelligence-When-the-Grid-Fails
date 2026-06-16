@@ -1,4 +1,3 @@
-
 .venv/
 env/
 venv/
@@ -6,24 +5,21 @@ ENV/
 env.bak/
 venv.bak/
 
-
 stages/
 raw_docs_test/
+raw_data/
+raw_docs/
 doc/
-
 
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 
-
 .ipynb_checkpoints
-
 
 .DS_Store
 Thumbs.db
-
 
 .vscode/
 .idea/
