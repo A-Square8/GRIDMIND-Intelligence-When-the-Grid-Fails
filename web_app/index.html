@@ -4,30 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
+    <meta name="description" content="GridMind - Offline survival intelligence system. RAG-powered AI assistant for when the grid fails.">
     <title>GRIDMIND OS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="manifest" href="/static/manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo"><span>GRID</span>MIND</div>
-        <div class="status-item">STATUS: OFFLINE</div>
-        <div class="status-item">SYS: ACTIVE</div>
-        <div class="controls">
-            <label for="top_k">Context Depth</label>
-            <input type="range" id="top_k" min="1" max="6" value="3">
-            <button id="clear_btn" class="action-btn">CLEAR MEMORY</button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo"><span class="logo-accent">GRID</span>MIND</div>
+            <div class="version-tag">v2.0</div>
+        </div>
+
+        <div class="system-panel">
+            <div class="panel-title">SYSTEM STATUS</div>
+            <div class="stat-row">
+                <span class="stat-label">STATUS</span>
+                <span class="stat-value" id="stat_ollama">--</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">UPTIME</span>
+                <span class="stat-value" id="stat_uptime">--</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">RAM</span>
+                <span class="stat-value" id="stat_ram">--</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">CACHE</span>
+                <span class="stat-value" id="stat_cache">--</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">QUERIES</span>
+                <span class="stat-value" id="stat_queries">--</span>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="panel-title">CONTROLS</div>
+            <label class="control-label" for="top_k">Context Depth</label>
+            <input type="range" id="top_k" min="1" max="6" value="3" class="range-input">
+            <div class="control-buttons">
+                <button id="new_session_btn" class="action-btn">NEW SESSION</button>
+                <button id="clear_btn" class="action-btn">CLEAR MEMORY</button>
+            </div>
+        </div>
+
+        <div class="history-panel" id="history_panel">
+            <div class="panel-title">CONVERSATIONS</div>
+            <div id="conversation_list" class="conversation-list"></div>
+        </div>
+
+        <div class="planner-toggle">
+            <button id="planner_btn" class="action-btn planner-action-btn">SURVIVAL PLANNER</button>
         </div>
     </div>
+
     <div class="main">
-        <div class="header">TERMINAL</div>
+        <div class="header">
+            <button class="sidebar-toggle" id="sidebar_toggle">MENU</button>
+            <span class="header-title">TERMINAL</span>
+            <div class="confidence-badge" id="confidence_badge"></div>
+        </div>
+
+        <div class="quick-prompts" id="quick_prompts">
+            <button class="prompt-chip" data-prompt="How to purify water from a river">Water purification</button>
+            <button class="prompt-chip" data-prompt="How to treat a deep laceration with no medical supplies">Wound treatment</button>
+            <button class="prompt-chip" data-prompt="How to build an emergency shelter in winter">Emergency shelter</button>
+            <button class="prompt-chip" data-prompt="How to start a fire with no matches or lighter">Fire starting</button>
+            <button class="prompt-chip" data-prompt="How to identify edible plants in the forest">Edible plants</button>
+            <button class="prompt-chip" data-prompt="Early signs of radiation sickness and treatment">Radiation sickness</button>
+        </div>
+
         <div class="chat-container" id="chat_container"></div>
+
+        <div class="planner-container" id="planner_container" style="display:none;">
+            <div class="planner-header">
+                <span class="panel-title">72-HOUR SURVIVAL PLAN</span>
+                <button id="planner_close_btn" class="action-btn">BACK TO CHAT</button>
+            </div>
+            <div class="planner-input-area" id="planner_input_area">
+                <textarea id="situation_input" placeholder="Describe your situation: location, weather, injuries, available resources..." rows="3"></textarea>
+                <button id="generate_plan_btn" class="action-btn planner-action-btn">GENERATE PLAN</button>
+            </div>
+            <div id="plan_display" class="plan-display"></div>
+        </div>
+
         <div class="input-container">
-            <input type="text" id="user_input" placeholder="Enter command sequence..." autocomplete="off">
+            <input type="text" id="user_input" placeholder="Enter query... (Ctrl+Enter to send)" autocomplete="off">
             <button id="send_btn">EXECUTE</button>
         </div>
     </div>
+
     <script src="/static/script.js"></script>
 </body>
 </html>

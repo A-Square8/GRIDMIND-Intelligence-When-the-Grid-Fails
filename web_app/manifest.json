@@ -1,8 +1,11 @@
 {
   "name": "GridMind OS",
   "short_name": "GridMind",
+  "description": "Offline survival intelligence system. RAG-powered AI assistant for when the grid fails.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000"
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "orientation": "any",
+  "categories": ["utilities", "productivity"]
 }
