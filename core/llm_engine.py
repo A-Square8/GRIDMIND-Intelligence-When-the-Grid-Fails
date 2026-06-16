@@ -1,27 +1,13 @@
-
-# GridMind LLM Engine
-# Modular backend abstraction with lazy loading and streaming support.
-
-
-from __future__ import annotations
-
 import json
 import logging
 import time
 from abc import ABC, abstractmethod
 from typing import Generator
-
 import requests
 
 logger = logging.getLogger(__name__)
 
-
-# Abstract base
-
-
 class LLMBackend(ABC):
-    """Abstract base class for LLM inference backends."""
-
     @abstractmethod
     def generate(
         self,
@@ -33,24 +19,13 @@ class LLMBackend(ABC):
         stop: list[str] | None = None,
         stream: bool = True,
     ) -> str | Generator[str, None, None]:
-        """Generate a response from the model.
-
-        When *stream* is True the return value is a generator that yields
-        text chunks.  When False a single complete string is returned.
-        """
+        pass
 
     @abstractmethod
     def health_check(self) -> bool:
-        """Return True if the backend is operational."""
-
-
-
-# Ollama backend (REST API)
-
+        pass
 
 class OllamaBackend(LLMBackend):
-    """Ollama inference via its local REST API."""
-
     def __init__(
         self,
         model: str = "qwen2.5:3b",
@@ -64,14 +39,10 @@ class OllamaBackend(LLMBackend):
         self.n_threads = n_threads
         self._session: requests.Session | None = None
 
-
-
     def _get_session(self) -> requests.Session:
         if self._session is None:
             self._session = requests.Session()
         return self._session
-
- 
 
     def generate(
         self,
@@ -143,8 +114,6 @@ class OllamaBackend(LLMBackend):
             token_count / elapsed if elapsed else 0,
         )
 
-
-
     def health_check(self) -> bool:
         try:
             resp = self._get_session().get(
@@ -153,7 +122,6 @@ class OllamaBackend(LLMBackend):
             resp.raise_for_status()
             models = [m["name"] for m in resp.json().get("models", [])]
             if self.model not in models:
-
                 base = self.model.split(":")[0]
                 if not any(m.startswith(base) for m in models):
                     logger.warning(
@@ -166,35 +134,31 @@ class OllamaBackend(LLMBackend):
             logger.error("Ollama health check failed: %s", exc)
             return False
 
-
-
-# llama-cpp-python backend (direct GGUF loading)
-
-
 class LlamaCppBackend(LLMBackend):
-    """CPU-only GGUF inference via llama-cpp-python with lazy loading."""
-
     def __init__(
         self,
         model_path: str,
-        n_ctx: int = 2048,
-        n_threads: int = 2,
+        n_ctx: int = 1024,
+        n_threads: int = 4,
         n_gpu_layers: int = 0,
         n_batch: int = 128,
+        use_mmap: bool = True,
+        use_mlock: bool = False
     ) -> None:
         self.model_path = model_path
         self.n_ctx = n_ctx
         self.n_threads = n_threads
         self.n_gpu_layers = n_gpu_layers
         self.n_batch = n_batch
-        self._model = None  # lazy
-
+        self.use_mmap = use_mmap
+        self.use_mlock = use_mlock
+        self._model = None
 
     def _get_model(self):
         if self._model is None:
             from llama_cpp import Llama  
 
-            logger.info("Loading GGUF model from %s …", self.model_path)
+            logger.info("Loading GGUF model from %s", self.model_path)
             t0 = time.perf_counter()
             self._model = Llama(
                 model_path=self.model_path,
@@ -202,14 +166,12 @@ class LlamaCppBackend(LLMBackend):
                 n_threads=self.n_threads,
                 n_gpu_layers=self.n_gpu_layers,
                 n_batch=self.n_batch,
-                use_mmap=True,
-                use_mlock=False,
+                use_mmap=self.use_mmap,
+                use_mlock=self.use_mlock,
                 verbose=False,
             )
             logger.info("Model loaded in %.1fs", time.perf_counter() - t0)
         return self._model
-
-
 
     def generate(
         self,
@@ -269,37 +231,21 @@ class LlamaCppBackend(LLMBackend):
             token_count / elapsed if elapsed else 0,
         )
 
-  
-
     def health_check(self) -> bool:
         try:
             model = self._get_model()
-
             output = model("Hello", max_tokens=1)
             return bool(output["choices"][0]["text"])
         except Exception as exc:
             logger.error("LlamaCpp health check failed: %s", exc)
             return False
 
-
-
-
 _BACKENDS = {
     "ollama": OllamaBackend,
     "llama_cpp": LlamaCppBackend,
 }
 
-
 def create_llm_backend(backend: str = "ollama", **kwargs) -> LLMBackend:
-    """Create an LLM backend instance.
-
-    Args:
-        backend: One of 'ollama' or 'llama_cpp'.
-        **kwargs: Passed directly to the backend constructor.
-
-    Returns:
-        An initialised LLMBackend.
-    """
     cls = _BACKENDS.get(backend)
     if cls is None:
         raise ValueError(
