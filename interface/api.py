@@ -1,7 +1,6 @@
 import os
 import sys
 
-# Ensure core can be imported
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from typing import Optional, Iterator
@@ -10,12 +9,7 @@ from core.retriever import ContextRetriever
 from core.rag_pipeline import RAGPipeline
 
 class GridMindAPI:
-    """
-    Thin API wrapper exposing core RAG capabilities to the UI 
-    to ensure clean decoupling between frontend and backend.
-    """
     def __init__(self, llm_backend: str = "ollama", model_path: str = "", store_dir: str = "data/vector_store"):
-        print("[*] GridMind API initializing...")
         if llm_backend == "llamacpp":
              self.llm = create_llm_backend(backend=llm_backend, model_path=model_path)
         else:

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>GRIDMIND OS</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="manifest" href="/static/manifest.json">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo"><span>GRID</span>MIND</div>
+        <div class="status-item">STATUS: OFFLINE</div>
+        <div class="status-item">SYS: ACTIVE</div>
+        <div class="controls">
+            <label for="top_k">Context Depth</label>
+            <input type="range" id="top_k" min="1" max="6" value="3">
+            <button id="clear_btn" class="action-btn">CLEAR MEMORY</button>
+        </div>
+    </div>
+    <div class="main">
+        <div class="header">TERMINAL</div>
+        <div class="chat-container" id="chat_container"></div>
+        <div class="input-container">
+            <input type="text" id="user_input" placeholder="Enter command sequence..." autocomplete="off">
+            <button id="send_btn">EXECUTE</button>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
