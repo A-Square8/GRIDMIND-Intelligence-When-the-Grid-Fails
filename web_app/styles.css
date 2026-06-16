@@ -128,3 +128,29 @@ body {
     font-weight: bold;
     margin-bottom: 10px;
 }
+
+.message.assistant {
+    white-space: normal;
+}
+.message p {
+    margin-bottom: 15px;
+}
+.message p:last-child {
+    margin-bottom: 0;
+}
+.message ul, .message ol {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+.message li {
+    margin-bottom: 5px;
+}
+.message strong {
+    color: var(--accent);
+}
+.message code {
+    background-color: var(--bg-primary);
+    padding: 2px 4px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+}

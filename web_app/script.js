@@ -70,7 +70,7 @@ async function handleSend() {
             }
             
             if (metaParsed) {
-                contentDiv.textContent = fullText;
+                contentDiv.innerHTML = marked.parse(fullText);
             }
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
