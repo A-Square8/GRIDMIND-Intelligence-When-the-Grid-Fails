@@ -50,13 +50,25 @@ class RAGPipeline:
             self.prompt_template = f.read()
 
     def query(self, user_query, top_k=3, domain_filter=None):
+        cached_meta = {
+            "mode": "SURVIVAL",
+            "urgency": "NORMAL",
+            "persona": "EXPERT",
+            "confidence": "CACHED",
+            "procedures_matched": 0,
+            "concepts_linked": False,
+        }
+        cached_meta_str = f"__META__:{json.dumps(cached_meta)}__META_END__\n" + " " * 1024 + "\n"
+
         cached_response = self.cache.get(user_query)
         if cached_response:
+            yield cached_meta_str
             yield cached_response
             return
 
         semantic_cached = self.cache.get_semantic(user_query)
         if semantic_cached:
+            yield cached_meta_str
             yield semantic_cached
             return
 
@@ -124,7 +136,7 @@ class RAGPipeline:
             "procedures_matched": len(matched_procedures),
             "concepts_linked": bool(concept_ctx),
         }
-        yield f"__META__:{json.dumps(meta)}__META_END__\n"
+        yield f"__META__:{json.dumps(meta)}__META_END__\n" + " " * 1024 + "\n"
 
         if gate_result == "NO_MATCH":
             no_match_msg = "I do not have reliable information on this topic in my knowledge base. Please consult your physical reference materials or rephrase your question to match a survival domain I cover: water purification, first aid, shelter, fire, food, navigation, or emergency communication."
@@ -135,7 +147,7 @@ class RAGPipeline:
 
         try:
             response_chunks = []
-            for chunk in self.llm.generate(final_prompt):
+            for chunk in self.llm.generate(final_prompt, stop=["[SYS] Output complete.", "[SYS] Output complete", "Answer:"]):
                 response_chunks.append(chunk)
                 yield chunk
 
@@ -155,7 +167,7 @@ class RAGPipeline:
             time.sleep(3)
             try:
                 response_chunks = []
-                for chunk in self.llm.generate(final_prompt):
+                for chunk in self.llm.generate(final_prompt, stop=["[SYS] Output complete.", "[SYS] Output complete", "Answer:"]):
                     response_chunks.append(chunk)
                     yield chunk
                 full_response = "".join(response_chunks)

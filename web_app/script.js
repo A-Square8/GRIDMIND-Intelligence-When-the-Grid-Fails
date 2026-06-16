@@ -176,7 +176,18 @@ clearBtn.addEventListener("click", clearMemory);
 
 async function clearMemory() {
     await fetch("/api/clear_memory", { method: "POST" });
-    addMessage("[SYS] Memory cleared.", false);
+    chatContainer.innerHTML = "";
+    addMessage("[SYS] Memory and database history cleared.", false);
+    loadConversations();
+}
+
+const clearCacheBtn = document.getElementById("clear_cache_btn");
+if (clearCacheBtn) {
+    clearCacheBtn.addEventListener("click", async function() {
+        await fetch("/api/clear_cache", { method: "POST" });
+        addMessage("[SYS] Semantic cache cleared.", false);
+        fetchStats();
+    });
 }
 
 

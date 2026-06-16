@@ -59,13 +59,13 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 @app.get("/", response_class=HTMLResponse)
-async def read_index():
+def read_index():
     with open("web_app/index.html", "r") as f:
         return f.read()
 
 
 @app.post("/api/chat")
-async def chat_endpoint(req: QueryRequest):
+def chat_endpoint(req: QueryRequest):
     def generate():
         try:
             for chunk in api_instance.query(req.text, top_k=req.top_k, domain=req.domain):
@@ -78,36 +78,41 @@ async def chat_endpoint(req: QueryRequest):
 
 
 @app.post("/api/clear_memory")
-async def clear_memory():
-    api_instance.pipeline.clear_memory()
+def clear_memory():
+    api_instance.clear_memory()
+    return {"status": "cleared"}
+
+@app.post("/api/clear_cache")
+def clear_cache():
+    api_instance.clear_cache()
     return {"status": "cleared"}
 
 
 @app.post("/api/conversations/new")
-async def new_conversation():
+def new_conversation():
     return api_instance.new_conversation()
 
 
 @app.get("/api/conversations")
-async def list_conversations():
+def list_conversations():
     return api_instance.list_conversations()
 
 
 @app.post("/api/conversations/load")
-async def load_conversation(req: ConversationRequest):
+def load_conversation(req: ConversationRequest):
     api_instance.set_conversation(req.conversation_id)
     history = api_instance.get_conversation(req.conversation_id)
     return {"conversation_id": req.conversation_id, "messages": history}
 
 
 @app.post("/api/planner/create")
-async def create_plan(req: PlanRequest):
+def create_plan(req: PlanRequest):
     plan = api_instance.create_plan(req.situation)
     return plan
 
 
 @app.get("/api/planner/active")
-async def get_active_plan():
+def get_active_plan():
     plan = api_instance.get_active_plan()
     if plan:
         return plan
@@ -115,7 +120,7 @@ async def get_active_plan():
 
 
 @app.post("/api/planner/update")
-async def update_plan_task(req: TaskUpdateRequest):
+def update_plan_task(req: TaskUpdateRequest):
     plan = api_instance.update_plan_task(req.task_index, req.status)
     if plan:
         return plan
@@ -123,17 +128,17 @@ async def update_plan_task(req: TaskUpdateRequest):
 
 
 @app.delete("/api/planner/clear")
-async def clear_plan():
+def clear_plan():
     return api_instance.clear_plan()
 
 
 @app.get("/api/health")
-async def health_check():
+def health_check():
     return health_monitor.get_report()
 
 
 @app.get("/api/system/stats")
-async def system_stats():
+def system_stats():
     health = health_monitor.get_report()
     db_stats = api_instance.db.get_stats() if api_instance.db.available else {}
     return {**health, **db_stats}

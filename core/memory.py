@@ -45,3 +45,5 @@ class ConversationMemory:
 
     def clear(self):
         self.history = []
+        if self.db and self.conversation_id:
+            pass

@@ -5,451 +5,658 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GRIDMIND | Intelligence When the Grid Fails</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --gold: #D4AF37;
-            --black: #050505;
-            --gray: #1a1a1a;
-            --white: #f5f5f5;
-            --accent: #FFD700;
+            --bg-color: #030712;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #111827 0%, #030712 100%);
+            --accent-primary: #f59e0b; /* Amber */
+            --accent-secondary: #10b981; /* Emerald */
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --glass-bg: rgba(17, 24, 39, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            scroll-behavior: smooth;
         }
 
         body {
-            background: var(--black);
-            color: var(--white);
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(245, 158, 11, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.05), transparent 25%);
+            color: var(--text-main);
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(212, 175, 55, .08), transparent 30%),
-                radial-gradient(circle at 80% 40%, rgba(212, 175, 55, .05), transparent 25%),
-                radial-gradient(circle at 50% 80%, rgba(212, 175, 55, .04), transparent 30%);
-            pointer-events: none;
-            z-index: -1;
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
         }
 
+        /* --- UI Utilities --- */
         .container {
-            max-width: 1200px;
-            margin: auto;
+            max-width: 1300px;
+            margin: 0 auto;
             padding: 0 2rem;
         }
 
         section {
-            padding: 6rem 0;
+            padding: 8rem 0;
             position: relative;
         }
 
-        h1,
-        h2,
-        h3 {
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
         }
 
-        h2 {
-            font-size: 2.2rem;
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 700;
             margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        p {
-            color: #d0d0d0;
+        .section-header p {
+            color: var(--accent-primary);
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
         }
 
-        .gold-text {
-            color: var(--gold);
+        /* --- Navbar --- */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(3, 7, 18, 0.8);
         }
 
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--accent-primary);
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .btn-github {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-github:hover {
+            background: white;
+            color: black;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,255,255,0.2);
+        }
+
+        /* --- Hero Section --- */
         .hero {
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
+            align-items: center;
             text-align: center;
-            background: radial-gradient(circle at center, #161616 0%, #050505 70%);
+            padding-top: 6rem;
         }
 
         .hero h1 {
-            font-size: 6rem;
+            font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 900;
-            line-height: 1;
-            margin-bottom: 1rem;
-            background: linear-gradient(to bottom, #FFD700, #D4AF37);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent-primary), #fbbf24);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: glow 3s ease-in-out infinite alternate;
         }
 
         .hero p {
-            font-size: 1.35rem;
-            max-width: 760px;
-            color: #999;
-            animation: fadeUp 1.2s ease forwards;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+            animation: fadeInUp 1s ease-out 0.2s both;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+        .hero-image-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            margin: 4rem auto 0;
+            position: relative;
+            animation: fadeInUp 1s ease-out 0.4s both;
         }
 
-        .card {
-            background: rgba(255, 255, 255, .03);
-            border: 1px solid rgba(212, 175, 55, .18);
+        .hero-image-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, transparent 50%, var(--accent-secondary) 100%);
+            filter: blur(40px);
+            opacity: 0.15;
+            z-index: -1;
+            border-radius: 20px;
+        }
+
+        .hero-image {
+            width: 100%;
             border-radius: 16px;
-            padding: 2rem;
-            backdrop-filter: blur(12px);
-            transition: .35s ease;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s ease;
+        }
+        
+        .hero-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* --- Features Section --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
         }
 
-        .card::before {
-            content: "";
+        .feature-card::before {
+            content: '';
             position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(255, 215, 0, .08), transparent 40%);
-            opacity: 0;
-            transition: .35s ease;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.4s ease;
         }
 
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: var(--gold);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(245, 158, 11, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        .card:hover::before {
-            opacity: 1;
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
 
-        .alt-bg {
-            background: #0a0a0a;
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--accent-primary);
+            margin-bottom: 1.5rem;
         }
 
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .comp-box {
-            padding: 2rem;
-            border-radius: 14px;
-            transition: .3s ease;
-        }
-
-        .comp-box:hover {
-            transform: translateY(-6px);
-        }
-
-        .comp-standard {
-            border-left: 4px solid #444;
-            background: rgba(255, 255, 255, .02);
-        }
-
-        .comp-gridmind {
-            border-left: 4px solid var(--gold);
-            background: rgba(212, 175, 55, .06);
-        }
-
-        .comp-label {
-            display: block;
-            font-size: .8rem;
-            font-weight: 700;
-            opacity: .7;
+        .feature-card h3 {
+            font-size: 1.5rem;
             margin-bottom: 1rem;
-            letter-spacing: 1px;
+            color: var(--text-main);
         }
 
-        .arch-img-p {
-            width: 100%;
-            margin-top: 2rem;
-            border: 1px solid rgba(212, 175, 55, .4);
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+        .feature-card p {
+            color: var(--text-muted);
         }
 
-        .arch-img-p img {
-            width: 100%;
-            display: block;
-            transition: transform .6s ease;
+        /* --- Architecture Section --- */
+        .architecture-showcase {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            text-align: center;
         }
 
-        .arch-img-p:hover img {
+        .architecture-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            transition: transform 0.5s ease;
+            cursor: pointer;
+        }
+        
+        .architecture-img:hover {
             transform: scale(1.03);
         }
 
-        .prompts-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .prompt-tag {
-            background: var(--gray);
-            border: 1px solid #333;
-            padding: .95rem 1.3rem;
-            border-radius: 999px;
-            font-size: .92rem;
-            transition: .3s ease;
-        }
-
-        .prompt-tag:hover {
-            background: var(--gold);
-            color: var(--black);
-            transform: translateY(-4px);
-        }
-
+        /* --- Interface Section --- */
         .interface-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+            align-items: center;
         }
 
-        .interface-gallery img {
+        .ui-image-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border);
+            transition: all 0.5s ease;
+        }
+
+        .ui-image-container img {
             width: 100%;
-            border-radius: 14px;
-            border: 1px solid rgba(212, 175, 55, .22);
-            transition: .35s ease;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
         }
 
-        .interface-gallery img:hover {
-            transform: scale(1.03);
-            border-color: var(--gold);
+        .ui-image-container:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent-secondary);
+            z-index: 10;
         }
 
+        .ui-1 { grid-column: 1 / 8; }
+        .ui-2 { grid-column: 6 / 13; margin-top: -100px; }
+        .ui-3 { grid-column: 3 / 11; margin-top: 40px; }
+
+        @media (max-width: 900px) {
+            .ui-1, .ui-2, .ui-3 {
+                grid-column: 1 / -1;
+                margin-top: 0;
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* --- Comparison Section --- */
+        .comparison-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .comparison-panel {
+            flex: 1;
+            min-width: 300px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            position: relative;
+        }
+
+        .comparison-panel.standard {
+            opacity: 0.8;
+            border-top: 4px solid #ef4444; /* Red for standard */
+        }
+
+        .comparison-panel.gridmind {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, rgba(17, 24, 39, 0.6) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-top: 4px solid var(--accent-secondary);
+            transform: scale(1.05);
+            z-index: 2;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .comp-badge {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .standard .comp-badge { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .gridmind .comp-badge { background: rgba(16, 185, 129, 0.1); color: var(--accent-secondary); }
+
+        .query-box {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-style: italic;
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .result-text {
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .verdict {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        .verdict span.bad { color: #ef4444; font-weight: 600; }
+        .verdict span.good { color: var(--accent-secondary); font-weight: 600; }
+
+        /* --- Footer --- */
         footer {
-            padding: 4rem 0;
-            border-top: 1px solid #222;
+            border-top: 1px solid var(--glass-border);
+            padding: 4rem 0 2rem;
+            background: #000;
             text-align: center;
-            color: #666;
         }
 
-        footer a {
-            color: var(--accent);
+        .footer-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+        
+        .footer-logo span { color: var(--accent-primary); }
+
+        .footer-links {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
             text-decoration: none;
+            transition: color 0.3s;
         }
 
-        footer a:hover {
-            text-decoration: underline;
+        .footer-links a:hover {
+            color: var(--accent-primary);
         }
 
-        .reveal {
-            opacity: 0;
-            transform: translateY(35px);
-            animation: fadeUp .9s ease forwards;
+        .copyright {
+            color: #6b7280;
+            font-size: 0.9rem;
         }
 
-        .delay-1 {
-            animation-delay: .1s;
-        }
-
-        .delay-2 {
-            animation-delay: .25s;
-        }
-
-        .delay-3 {
-            animation-delay: .4s;
-        }
-
-        @keyframes glow {
-            from {
-                filter: drop-shadow(0 0 8px rgba(212, 175, 55, .2));
-            }
-
-            to {
-                filter: drop-shadow(0 0 20px rgba(212, 175, 55, .45));
-            }
-        }
-
-        @keyframes fadeUp {
+        /* --- Animations --- */
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(35px);
+                transform: translateY(30px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        @media(max-width:768px) {
-            .hero h1 {
-                font-size: 3.2rem;
-            }
+        /* Utility for scroll reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
 
-            .hero p {
-                font-size: 1rem;
-            }
-
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-
-            section {
-                padding: 4rem 0;
-            }
-
-            h2 {
-                font-size: 1.7rem;
-            }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 
 <body>
 
-    <section class="hero">
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <a href="#" class="logo">GRID<span>MIND</span></a>
+            <div class="nav-links">
+                <a href="#features" style="display: none;">Features</a>
+                <a href="https://github.com/A-Square8/GRIDMIND-Intelligence-When-the-Grid-Fails" target="_blank" class="btn-github">
+                    <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                    </svg>
+                    GitHub Repository
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
         <div class="container">
-            <h1>GRIDMIND</h1>
-            <p>High-Precision Survival Intelligence for the Off-Grid World.</p>
+            <h1>Intelligence <br>When the Grid <span class="highlight">Fails.</span></h1>
+            <p>A self-contained, offline-first RAG engine designed for survival scenarios. Providing high-precision, actionable intelligence without reliance on the cloud, power grids, or external networks.</p>
+            
+            <div class="hero-image-wrapper">
+                <img src="web_src/image.png" alt="GridMind Concept" class="hero-image">
+            </div>
         </div>
     </section>
 
-    <section id="system">
-        <div class="container">
-            <h2>What the system does</h2>
-            <div class="grid">
-                <div class="card">
-                    <h3 class="gold-text">Offline RAG</h3>
-                    <p>Uses Retrieval-Augmented Generation to anchor AI responses in verified local survival manuals,
-                        eliminating hallucinations when lives are on the line.</p>
+    <!-- Features Section -->
+    <section id="features">
+        <div class="container reveal">
+            <div class="section-header">
+                <p>Core Capabilities</p>
+                <h2>Built for the Extreme</h2>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9"/></svg>
+                    </div>
+                    <h3>100% Offline RAG</h3>
+                    <p>Uses Retrieval-Augmented Generation to anchor AI responses in verified local survival manuals. Zero internet connection required. Eliminates hallucinations when lives are on the line.</p>
                 </div>
-                <div class="card">
-                    <h3 class="gold-text">CPU Optimized</h3>
-                    <p>Designed to run on commodity hardware (laptops, Pi-based systems) using quantized GGUF models,
-                        ensuring availability without massive GPUs.</p>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                    </div>
+                    <h3>CPU Optimized</h3>
+                    <p>Designed to run fluidly on commodity hardware like standard laptops and Raspberry Pi systems. Utilizing quantized GGUF models ensures you don't need a massive GPU to survive.</p>
                 </div>
-                <div class="card">
-                    <h3 class="gold-text">Modular Ingestion</h3>
-                    <p>Instant knowledge base expansion via SHA-256 fingerprinting. Add new manuals and sync in seconds
-                        without full re-indexing.</p>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    </div>
+                    <h3>Modular Ingestion</h3>
+                    <p>Instant knowledge base expansion via SHA-256 fingerprinting. Easily drop in new field manuals, medical texts, or tactical guides and sync in seconds without requiring full system re-indexing.</p>
                 </div>
             </div>
         </div>
     </section>
 
-
-     <section id="vision" style="background: #0a0a0a;">
-        <div class="container">
-            <div style="max-width: 800px;">
-                <h2>Why this project?</h2>
-                <p style="font-size: 1.25rem; margin-top: 1.5rem;">
-                    In a world increasingly dependent on centralized cloud AI, <span class="gold-text">GridMind</span>
-                    solves the "Reliability Gap." It provides sovereign intelligence that works when the power is out,
-                    the internet is dead, and help is not coming. It turns static PDF libraries into a dynamic, situated
-                    reasoning engine.
+    <!-- Architecture Section -->
+    <section id="architecture">
+        <div class="container reveal">
+            <div class="section-header">
+                <p>System Design</p>
+                <h2>Robust Architecture</h2>
+            </div>
+            
+            <div class="architecture-showcase">
+                <img src="web_src/architecture_diagram.png" alt="GridMind Architecture" class="architecture-img">
+                <p style="margin-top: 2rem; color: var(--text-muted); max-width: 600px; margin-left: auto; margin-right: auto;">
+                    A decentralized scatter-gather retrieval pipeline designed to pull from fragmented offline knowledge bases instantly.
                 </p>
             </div>
         </div>
     </section>
 
+    <!-- Comparison Section -->
     <section id="comparison">
-        <div class="container">
-            <h2>Standard LLM vs. GRIDMIND</h2>
-            <p class="gold-text" style="margin-bottom: 2rem;">Query: "Can I eat bread that expired 3 days ago?"</p>
+        <div class="container reveal">
+            <div class="section-header">
+                <p>The Difference</p>
+                <h2>Why Context Matters</h2>
+            </div>
 
-            <div class="comparison-grid">
-                <div class="comp-box comp-standard">
-                    <span class="comp-label">Standard LLM (Cloud-based)</span>
-                    <p>No. Bread past its recommended date may be unsafe to consume. It is best to discard expired food
-                        products and obtain a fresh source of food.</p>
-                    <p style="color: #666; font-size: 0.9rem; margin-top: 1rem;">Result: <span
-                            style="color: #ff4d4d;">Low Practical Value.</span> Gives generic safety advice without
-                        considering scarcity or context.</p>
+            <div class="query-box" style="max-width: 800px; margin: 0 auto 3rem;">
+                <p style="font-size: 1.2rem; color: var(--text-main); text-align: center;"><strong>Query:</strong> "Can I eat bread that expired 3 days ago?"</p>
+            </div>
+
+            <div class="comparison-wrapper">
+                <div class="comparison-panel standard">
+                    <span class="comp-badge">Standard Cloud LLM</span>
+                    <p class="result-text">"No. Bread past its recommended date may be unsafe to consume. It is best to discard expired food products and obtain a fresh source of food."</p>
+                    <div class="verdict">
+                        Result: <span class="bad">Low Practical Value.</span> Gives generic safety advice without considering scarcity, context, or visual inspection.
+                    </div>
                 </div>
 
-                <div class="comp-box comp-gridmind">
-                    <span class="comp-label">GRIDMIND (Survival RAG)</span>
-                    <p><strong>Field Assessment:</strong><br>
+                <div class="comparison-panel gridmind">
+                    <span class="comp-badge">GRIDMIND (Survival RAG)</span>
+                    <p class="result-text"><strong>Field Assessment:</strong><br><br>
                         1. <strong>Inspect:</strong> Check for green, black, or fuzzy mold spots.<br>
                         2. <strong>Smell:</strong> If sour, fermented, or unusual odor is present, discard.<br>
                         3. <strong>Texture:</strong> If dry or stale only, it is generally usable.<br>
-                        4. <strong>Use Fast:</strong> Consume soon after inspection or toast before use.<br>
-                        <strong>Judgment:</strong> Same facts, survival-calibrated decision making.
+                        4. <strong>Action:</strong> Consume soon after inspection or toast to eliminate surface pathogens.
                     </p>
-                    <p style="color: #666; font-size: 0.9rem; margin-top: 1rem;">Result: <span
-                            style="color: #2ecc71;">Actionable Intelligence.</span> Applies context-aware reasoning when
-                        alternatives are limited.</p>
+                    <div class="verdict">
+                        Result: <span class="good">Actionable Intelligence.</span> Applies survival-calibrated decision making based on military and survival manuals.
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-
-    <section class="alt-bg">
-        <div class="container">
-            <h2 class="reveal">System Architecture</h2>
-            <div class="arch-img-p reveal delay-1">
-                <img src="web_src/architecture_diagram.png" alt="Architecture">
+    <!-- Interface Showcase -->
+    <section id="interface" style="background: rgba(0,0,0,0.3); padding-top: 6rem; border-top: 1px solid var(--glass-border);">
+        <div class="container reveal">
+            <div class="section-header">
+                <p>User Interface</p>
+                <h2>Survival in the Terminal</h2>
             </div>
-            <p style="margin-top:1rem;color:#777;">Scatter-gather retrieval pipeline across fragmented offline knowledge
-                bases.</p>
-        </div>
-    </section>
-
-    <section>
-        <div class="container">
-            <h2 class="reveal">Sample Prompts</h2>
-
-            <div class="prompts-container">
-                <div class="prompt-tag reveal delay-1">Early signs of radiation sickness</div>
-                <div class="prompt-tag reveal delay-1">Field dressing a severe laceration</div>
-                <div class="prompt-tag reveal delay-2">Build a solar still from plastic</div>
-                <div class="prompt-tag reveal delay-2">Identify edible forest mushrooms</div>
-                <div class="prompt-tag reveal delay-3">Purify murky river water</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="alt-bg">
-        <div class="container">
-            <h2 class="reveal">Sample Interface</h2>
-            <p class="gold-text reveal delay-1">Terminal-style dashboard for fast offline use.</p>
 
             <div class="interface-gallery">
-                <img class="reveal delay-1" src="web_src/sample_query1.png" alt="UI 1">
-                <img class="reveal delay-2" src="web_src/sample_query2.png" alt="UI 2">
-                <img class="reveal delay-3" src="web_src/sample_query3.png" alt="UI 3">
+                <div class="ui-image-container ui-1">
+                    <img src="web_src/terminal_ui_1.png" alt="Terminal UI Screenshot 1">
+                </div>
+                <div class="ui-image-container ui-2">
+                    <img src="web_src/terminal_ui_2.png" alt="Terminal UI Screenshot 2">
+                </div>
+                <div class="ui-image-container ui-3">
+                    <img src="web_src/terminal_ui_3.png" alt="Terminal UI Screenshot 3">
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 4rem;">
+                <a href="https://github.com/A-Square8/GRIDMIND-Intelligence-When-the-Grid-Fails" target="_blank" class="btn-github" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                    Get Started on GitHub
+                </a>
             </div>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 GRIDMIND — Intelligence When the Grid Fails.</p>
-            <p style="font-size:.9rem;margin-top:.4rem;">Powered by Qwen 2.5 & FAISS Local RAG Pipeline.</p>
-            <p style="margin-top:.5rem;">
-                GitHub:
-                <a href="https://github.com/A-Square8/GRIDMIND-Intelligence-When-the-Grid-Fails">GRIDMIND</a>
-            </p>
+            <div class="footer-logo">GRID<span>MIND</span></div>
+            <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto;">Intelligence When the Grid Fails.</p>
+            
+            <div class="footer-links">
+                <a href="https://github.com/A-Square8/GRIDMIND-Intelligence-When-the-Grid-Fails" target="_blank">GitHub</a>
+                <a href="#home">Home</a>
+                <a href="#features">Features</a>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2026 GRIDMIND. Powered by Local RAG Pipelines.
+            </div>
         </div>
     </footer>
 
-</body>
+    <!-- Scroll Reveal Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const reveals = document.querySelectorAll('.reveal');
 
+            function reveal() {
+                var windowHeight = window.innerHeight;
+                var elementVisible = 150;
+
+                reveals.forEach((reveal) => {
+                    var elementTop = reveal.getBoundingClientRect().top;
+                    if (elementTop < windowHeight - elementVisible) {
+                        reveal.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', reveal);
+            // Trigger once on load
+            reveal();
+        });
+    </script>
+</body>
 </html>

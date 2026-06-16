@@ -38,6 +38,19 @@ class GridMindAPI:
         self.pipeline.clear_memory()
         return {"status": "new_conversation"}
 
+    def clear_memory(self):
+        self.current_conversation = None
+        self.pipeline.clear_memory()
+        if self.db.available:
+            self.db.clear_all_history()
+        return {"status": "cleared"}
+
+    def clear_cache(self):
+        self.pipeline.cache.cache.clear()
+        if self.db.available:
+            self.db.clear_cache()
+        return {"status": "cache_cleared"}
+
     def set_conversation(self, conversation_id):
         self.current_conversation = conversation_id
         self.pipeline.set_conversation(conversation_id)

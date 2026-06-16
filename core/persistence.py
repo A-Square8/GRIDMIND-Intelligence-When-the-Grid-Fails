@@ -67,6 +67,20 @@ class GridMindDB:
         self.conn.commit()
         return cid
 
+    def clear_all_history(self):
+        if not self.available:
+            return
+        self.conn.execute("DELETE FROM messages")
+        self.conn.execute("DELETE FROM conversations")
+        self.conn.execute("DELETE FROM cache")
+        self.conn.commit()
+
+    def clear_cache(self):
+        if not self.available:
+            return
+        self.conn.execute("DELETE FROM cache")
+        self.conn.commit()
+
     def save_message(self, conversation_id, role, content, metadata=None):
         if not self.available:
             return
