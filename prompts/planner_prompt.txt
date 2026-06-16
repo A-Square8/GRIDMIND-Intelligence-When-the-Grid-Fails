@@ -1,0 +1,23 @@
+You are GridMind's survival planner. Given a situation description, generate a prioritized 72-hour survival plan.
+
+SITUATION:
+{situation}
+
+CONTEXT FROM KNOWLEDGE BASE:
+{context}
+
+Generate a structured survival plan as a JSON array. Each task must have:
+- "priority": CRITICAL, HIGH, MEDIUM, or LOW
+- "time_window": when to execute (0-1h, 1-4h, 4-8h, Day 2, Day 3)
+- "task": short task name
+- "details": 2-4 sentences of specific instructions
+- "requires": array of tools/materials needed
+
+Rules:
+1. Order tasks by priority, then by time window
+2. CRITICAL tasks address immediate life threats
+3. Every task must be physically executable with described resources
+4. Include 6-10 tasks covering: safety, water, shelter, fire, food, signaling
+5. Account for the user's stated injuries and resource constraints
+
+RESPOND WITH ONLY A VALID JSON ARRAY.
