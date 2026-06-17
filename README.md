@@ -33,7 +33,7 @@ GridMind uses a highly optimized hybrid-retrieval pipeline combined with a deter
 GridMind features a high-contrast, low-power **Tactical Brutalist Dashboard** built to render perfectly on ruggedized tablet screens, mobile phones (via local LAN), or e-ink monitors where visibility in high-glare or low-light situations is critical.
 
 <div align="center">
-  <img src="web_src/Screenshot from 2026-06-16 19-30-18.png" alt="GridMind Tactical Interface Overview" width="90%"/>
+  <img src="web_src/terminal_ui_1.png" alt="GridMind Tactical Interface Overview" width="90%"/>
 </div>
 
 ### Key UI Capabilities
@@ -47,7 +47,7 @@ GridMind features a high-contrast, low-power **Tactical Brutalist Dashboard** bu
     <tr>
       <td width="50%" align="center">
         <b>Survival Planner Mode</b><br/>
-        <img src="web_src/Screenshot from 2026-06-16 19-26-57.png" alt="Survival Planner View" width="100%"/>
+        <img src="web_src/terminal_ui_3.png" alt="Survival Planner View" width="100%"/>
       </td>
       <td width="50%" align="center">
         <b>Low-Power Mobile View</b><br/>
